@@ -1,0 +1,82 @@
+/*
+ * main.c
+ *
+ *  Created on: Oct 1, 2023
+ *      Author: dell
+ */
+#include "Std.h"
+
+#include "Dio_cfg.h"
+#include "Dio_int.h"
+
+#include "SPI_Config.h"
+#include "SPI_Interface.h"
+
+#include "UART_Config.h"
+#include "UART_Interface.h"
+
+#include "TWI_Config.h"
+#include "TWI_Interface.h"
+
+#include "EEPROM_Config.h"
+#include "EEPROM_Interface.h"
+
+#include "Keypad.h"
+#include "Keypad_confg.h"
+
+#include "Lcd.h"
+#include "Lcd_config.h"
+
+/* Global Variable */ 
+u8 LCD_Array[10] = "Hello" ;
+u8 UART_PassRx [10] ;
+u8 UART_IndexRx ;
+u8 UART_UserPrivillege  ; 
+u8 Char_Rx = 0 ;
+u8 SPI_Var = 0 ; 
+u8 UART_State ;
+//////////////////////////
+u8 LCD_Mode1[15] = "A-ADD User" ;
+u8 LCD_Mode2[15] = "B-Delete User" ;
+u8 LCD_Mode3[15] = "C-Change Pass " ;
+u8 LCD_Mode4[15] = "D-Continue" ;
+u8 LCD_Mode5[15] = "Enter Option:" ;
+//////////////////////////
+u8 LCD_Admin[15] = "1-ADMIN" ;
+u8 LCD_User[15] =  "2-User" ;
+//////////////////////////
+u8 LCD_User1[15] = "E-Door Control " ;
+u8 LCD_User2[15] = "F-AC Control" ;
+u8 LCD_User3[20] = "G-Lamps Control" ;
+
+
+u8 Index  ;
+
+
+void Add_User(void){
+
+	AddPassword() ;
+    EEPROM_VidSendDataPage(Index ,0X00 ,UART_PassRx );
+    index+=3 ;
+	
+}
+
+
+
+void Choose_Operation(){
+
+	switch (UART_State)
+	{
+	case 'A': //user need to change the password or enter the password for the first time
+	      Add_User();
+	      break;
+	case 'B': //user need to enter the password to either open the door or change password
+		 Delete_user(); //call PASS_CHECK function to check whether the password entered matches the user password or not
+		 break;
+	case 'C':
+		Change_Password();
+		break;
+
+	}
+	
+}
